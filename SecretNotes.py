@@ -3,7 +3,7 @@ from tkinter import messagebox
 
 from cryptography import fernet
 from cryptography.fernet import Fernet
-window = tk.Tk()
+
 window.title("Secret Notes ")
 window.config(pady=30, padx=30)
 window.minsize(width=400, height=700)
@@ -47,6 +47,7 @@ def save_button():
             key = Fernet.generate_key()
             print(key)
             fernet = Fernet(key)
+            print(fernet)
             enc_message = fernet.encrypt(secret_text.get("1.0",tk.END).encode())
             secret_file.write(f"\n {enc_message}\n")
             key_save[enc_message] = key_entry.get()
@@ -64,8 +65,10 @@ def decrypted_message():
         opening_file()
         with open('secret.txt', mode='r') as secret_file:
             #if str(key_entry.get()) == key_save[secret_text.get("1.0", tk.END)]:
-            decMessage = secret_text.get("1.0", tk.END).decode()
-            print(decMessage)
+
+            passwordChosen = fernet.decrypt(secret_text.get("1.0", tk.END) )
+            decryptedPasswordDB = passwordChosen.decode('utf-8')
+            print(decryptedPasswordDB)
 decrypt_button = tk.Button(text="Decrypt", command=decrypted_message)
 decrypt_button.pack()
 print(decrypted_message())
